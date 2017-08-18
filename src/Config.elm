@@ -6,7 +6,7 @@ import Style.Scale as Scale
 
 type alias ResponsiveConfig =
     { scaled : Int -> Float
-    , responsiveLH : Float
+    , fluidLineHeight : Float
     }
 
 
@@ -27,22 +27,34 @@ responsiveConfig device =
         -- Viewport width bounds within which a linear scale is applied as to scale
         -- the modular scale ratios from msRatio1 to msRatio2
         --
-        --    e.g. At and below 300px, the modular scale ratio is 1.18
-        --         At 750px, the modular scale ratio is 1.27
-        --         At 1200px and above, the modular scale ratio is 1.36
+        --    e.g. If the viewport width is `viewportLowBound` pixels or lower, the modular scale ratio is `msRatio1`
+        --         If it is halfway between `viewportLowBound` and `viewportHighBound` pixels,
+        --           the modular scale ratio is `(msRatio1 + msRatio2) / 2`
+        --         If it is at `viewportHighBound` or higher, the modular scale ratio is `msRatio2`
         --
-        vpLowerBound =
+        viewportLowBound =
             300
 
-        vpHigherBound =
+        viewportHighBound =
             1200
 
-        -- Factor for the modular scale
+        -- Fluid line height lower and higher bounds
+        --
+        --   e.g. If the viewport width is `viewportLowBound` pixels or lower the line height is `lineHeightMin`
+        --        If the viewport width is between `viewportLowBound` and `viewportHighBound` pixels,
+        --          the line height is `(lineHeightMin + lineHeightMax) / 2`
+        --        If the viewport width is `viewportHighBound` pixels or above the line height is `lineHeightMax`
+        lineHeightMin =
+            1.2
+
+        lineHeightMax =
+            1.8
+
         scaleFactor =
-            Element.responsive (toFloat device.width) ( vpLowerBound, vpHigherBound ) ( msRatio1, msRatio2 )
+            Element.responsive (toFloat device.width) ( viewportLowBound, viewportHighBound ) ( msRatio1, msRatio2 )
     in
     { scaled =
         Scale.modular msBase scaleFactor
-    , responsiveLH =
-        Element.responsive (toFloat device.width) ( vpLowerBound, vpHigherBound ) ( msRatio1, msRatio2 )
+    , fluidLineHeight =
+        Element.responsive (toFloat device.width) ( viewportLowBound, viewportHighBound ) ( lineHeightMin, lineHeightMax )
     }
