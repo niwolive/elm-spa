@@ -12,7 +12,7 @@ import Window
 view : Model -> Html msg
 view model =
     Element.layout (stylesheet (Config.responsiveConfig model.device)) <|
-        column None
+        column Base
             []
             [ el Logo [] (text "lillis")
             , el BigTitle [] (text "This is a big header")

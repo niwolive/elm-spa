@@ -7,6 +7,7 @@ import Style.Font as Font
 
 type Styles
     = None
+    | Base
     | Header
     | BigTitle
     | MediumTitle
@@ -15,9 +16,13 @@ type Styles
 
 
 stylesheet : Config.ResponsiveConfig -> StyleSheet Styles variation
-stylesheet { baseFontSize, scaled } =
+stylesheet { scaled, fluidLineHeight } =
     Style.styleSheet
         [ style None []
+        , style Base
+            [ Font.size (scaled 1)
+            , Font.lineHeight fluidLineHeight
+            ]
         , style Header
             [ Font.size (scaled 1)
             ]
